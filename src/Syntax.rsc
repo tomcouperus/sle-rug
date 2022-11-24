@@ -13,7 +13,7 @@ syntax QuestionBlock = "{" Question* questions "}";
 
 // TODO: question, computed question, block, if-then-else, if-then
 syntax Question 
-  = Prompt prompt Id param ":" Type
+  = Prompt prompt Id param ":" Type ("=" Expr)?
   | "if" "(" Expr ")" QuestionBlock ("else" QuestionBlock)?
   ;
 
