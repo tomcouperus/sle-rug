@@ -11,7 +11,10 @@ start syntax Form
   = "form" Id name "{" Question* questions "}"; 
 
 // TODO: question, computed question, block, if-then-else, if-then
-syntax Question = ;
+syntax Question 
+  = Prompt prompt Id param ":" Type;
+
+syntax Prompt = "\"" [a-zA-Z0-9?]+ "\"";
 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
 // Think about disambiguation using priorities and associativity
@@ -20,14 +23,16 @@ syntax Expr
   = Id \ "true" \ "false" // true/false are reserved keywords.
   ;
   
-syntax Type = ;
+syntax Type 
+  = Str
+  | Int
+  | Bool;
 
-lexical Str = ;
+lexical Str = "string";
 
-lexical Int 
-  = ;
+lexical Int = "integer";
 
-lexical Bool = ;
+lexical Bool = "boolean";
 
 
 
