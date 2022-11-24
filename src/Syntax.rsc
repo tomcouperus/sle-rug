@@ -25,7 +25,17 @@ syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 syntax Expr 
   = Id \ "true" \ "false" // true/false are reserved keywords.
   ;
-  
+
+syntax Operator
+  = "*" | "%" | "/"
+  > "+" | "-"
+  > "\<" | "\<="
+  > "\>" | "\>="
+  > "==" | "!="
+  > "&&"
+  > "||"
+  ;
+
 syntax Type 
   = Str
   | Int
