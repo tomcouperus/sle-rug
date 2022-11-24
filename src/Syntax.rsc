@@ -11,7 +11,6 @@ start syntax Form = "form" Id name QuestionBlock;
 
 syntax QuestionBlock = "{" Question* questions "}";
 
-// TODO: question, computed question, block, if-then-else, if-then
 syntax Question 
   = Prompt prompt Id param ":" Type ("=" Expr)?
   | "if" "(" Expr ")" QuestionBlock ("else" QuestionBlock)?
@@ -23,11 +22,15 @@ syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 // Think about disambiguation using priorities and associativity
 // and use C/Java style precedence rules (look it up on the internet)
 syntax Expr 
-  = Id \ "true" \ "false" // true/false are reserved keywords.
+  = "(" Expr ")"
+  > Id \ "true" \ "false" // true/false are reserved keywords.
+  | Literal
+  | Expr Operator Expr
   ;
 
 syntax Operator
-  = "*" | "%" | "/"
+  = "!"
+  > "*" | "%" | "/"
   > "+" | "-"
   > "\<" | "\<="
   > "\>" | "\>="
@@ -36,16 +39,22 @@ syntax Operator
   > "||"
   ;
 
+syntax Literal
+  = IntLiteral
+  | BoolLiteral
+  | StrLiteral
+  ;
+
 syntax Type 
   = Str
   | Int
   | Bool;
 
 lexical Str = "string";
+syntax StrLiteral = "\"" ![\"] "\"";
 
 lexical Int = "integer";
+syntax IntLiteral = [0-9]+;
 
 lexical Bool = "boolean";
-
-
-
+syntax BoolLiteral = "true" | "false";
