@@ -1,6 +1,10 @@
 /bin/
 /.settings
+
+target
+
 /examples/*.html
 /examples/*.js
 
-target
+# pdfs
+Ralf Lämmel - Software Languages Syntax, Semantics, and Metaprogramming.pdf
