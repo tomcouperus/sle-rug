@@ -51,7 +51,7 @@ lexical Str = "string";
 syntax StrLiteral = "\"" ![\"] "\"";
 
 lexical Int = "integer";
-syntax IntLiteral = [0-9]+;
+syntax IntLiteral = "-"?[0-9]+;
 
 lexical Bool = "boolean";
 syntax BoolLiteral = "true" | "false";
