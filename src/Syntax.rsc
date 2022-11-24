@@ -7,14 +7,17 @@ extend lang::std::Id;
  * Concrete syntax of QL
  */
 
-start syntax Form 
-  = "form" Id name "{" Question* questions "}"; 
+start syntax Form = "form" Id name QuestionBlock; 
+
+syntax QuestionBlock = "{" Question* questions "}";
 
 // TODO: question, computed question, block, if-then-else, if-then
 syntax Question 
-  = Prompt prompt Id param ":" Type;
+  = Prompt prompt Id param ":" Type
+  | "if" "(" Expr ")" QuestionBlock ("else" QuestionBlock)?
+  ;
 
-syntax Prompt = "\"" [a-zA-Z0-9?]+ "\"";
+syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
 // Think about disambiguation using priorities and associativity
