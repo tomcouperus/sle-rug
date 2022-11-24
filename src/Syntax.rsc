@@ -18,19 +18,16 @@ syntax Question
 
 syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 
-// TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
-// Think about disambiguation using priorities and associativity
-// and use C/Java style precedence rules (look it up on the internet)
 syntax Expr 
   = "(" Expr ")"
+  > "!" Expr
+  > assoc Expr BinOperator Expr
   > Id \ "true" \ "false" // true/false are reserved keywords.
   | Literal
-  | Expr Operator Expr
   ;
 
-syntax Operator
-  = "!"
-  > "*" | "%" | "/"
+syntax BinOperator
+  = "*" | "%" | "/"
   > "+" | "-"
   > "\<" | "\<="
   > "\>" | "\>="
