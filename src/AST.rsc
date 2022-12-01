@@ -14,7 +14,7 @@ data AForm(loc src = |tmp:///|)
 data AQuestion(loc src = |tmp:///|)
   = question(str prompt, AId id, AType idtype)
   | calculated(str prompt, AId id, AType idtype, AExpr expr)
-  | ifelse(AExpr expr, list[AQuestion] ifs, list[AQuestion] elses)
+  | ifelse(AExpr cond, list[AQuestion] ifs, list[AQuestion] elses)
   ; 
 
 data AExpr(loc src = |tmp:///|)

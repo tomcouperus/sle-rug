@@ -4,6 +4,7 @@ import Syntax;
 import AST;
 
 import ParseTree;
+import IO;
 
 /*
  * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
@@ -20,8 +21,18 @@ AForm cst2ast(start[Form] sf) {
   return form("<f.name>", [ cst2ast(q) | q <- f.questions], src=f.src); 
 }
 
-default AQuestion cst2ast(Question q) {
-  throw "Not yet implemented <q>";
+AQuestion cst2ast(Question q) {
+  switch(q) {
+    case (Question)`<Prompt p> <Id i> : <Type t>`:
+      return question("<p>", id("<i>"), cst2ast(t));
+    case (Question)`<Prompt p> <Id i> : <Type t> = <Expr e>`:
+      return calculated("<p>", id("<i>"), cst2ast(t), cst2ast(e));
+    case (Question)`if (<Expr cond>) {<Question* ifqs>}`:
+      return ifelse(cst2ast(cond), [ cst2ast(q) | q <- ifqs], []);
+    case (Question)`if (<Expr cond>) {<Question* ifqs>} else {<Question* elseqs>}`:
+      return ifelse(cst2ast(cond), [cst2ast(q) | q <- ifqs], [cst2ast(q) | q <- elseqs]);
+    default: throw "Not implemented question format: <q>";
+  }
 }
 
 AExpr cst2ast(Expr e) {
@@ -34,5 +45,5 @@ AExpr cst2ast(Expr e) {
 }
 
 default AType cst2ast(Type t) {
-  throw "Not yet implemented <t>";
+  throw "Not implemented type: <t>";
 }
