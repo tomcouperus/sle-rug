@@ -70,4 +70,6 @@ Context-free grammars used for structured and nested concepts
   - Rigid actions
   - Error recovery more difficult 
 
+## Lecture 3
+No notes
 
