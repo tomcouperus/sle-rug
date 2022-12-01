@@ -20,25 +20,23 @@ syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 
 syntax Expr 
   = "(" Expr ")"
-  > UnOperator Expr
-  > assoc Expr BinOperator Expr
+  > "!" Expr
+  | "-" Expr
+  > Expr "*" Expr
+  | Expr "%" Expr
+  | Expr "/" Expr
+  > Expr "+" Expr
+  | Expr "-" Expr
+  > Expr "\<" Expr
+  | Expr "\<=" Expr
+  > Expr "\>" Expr
+  | Expr "\>=" Expr
+  > Expr "==" Expr
+  | Expr "!=" Expr
+  > Expr "&&" Expr
+  > Expr "||" Expr
   > Id \ "true" \ "false" // true/false are reserved keywords.
   | Literal
-  ;
-
-syntax UnOperator
-  = "!"
-  > "-"
-  ;
-
-syntax BinOperator
-  = "*" | "%" | "/"
-  > "+" | "-"
-  > "\<" | "\<="
-  > "\>" | "\>="
-  > "==" | "!="
-  > "&&"
-  > "||"
   ;
 
 syntax Literal
