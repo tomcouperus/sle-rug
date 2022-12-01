@@ -33,7 +33,7 @@ syntax Expr
   | Expr "!=" Expr)
   > left Expr "&&" Expr
   > left Expr "||" Expr
-  > Id \ "true" \ "false" // true/false are reserved keywords.
+  > Id \ BoolLiteral // true/false are reserved keywords.
   | Literal
   ;
 
@@ -55,4 +55,4 @@ lexical Int = "integer";
 syntax IntLiteral = [0-9]+;
 
 lexical Bool = "boolean";
-syntax BoolLiteral = "true" | "false";
+keyword BoolLiteral = "true" | "false";
