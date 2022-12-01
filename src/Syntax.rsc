@@ -21,7 +21,8 @@ syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 syntax Expr 
   = "(" Expr ")"
   > "!" Expr
-  > assoc Expr BinOperator Expr
+  > left Expr BinOperator Expr
+  | "-" Expr
   > Id \ "true" \ "false" // true/false are reserved keywords.
   | Literal
   ;
@@ -51,7 +52,7 @@ lexical Str = "string";
 syntax StrLiteral = "\"" ![\"] "\"";
 
 lexical Int = "integer";
-syntax IntLiteral = "-"?[0-9]+;
+syntax IntLiteral = [0-9]+;
 
 lexical Bool = "boolean";
 syntax BoolLiteral = "true" | "false";
