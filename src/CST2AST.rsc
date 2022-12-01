@@ -4,7 +4,6 @@ import Syntax;
 import AST;
 
 import ParseTree;
-import IO;
 
 /*
  * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
@@ -43,7 +42,11 @@ AExpr cst2ast(Expr e) {
     default: throw "Unhandled expression: <e>";
   }
 }
-
-default AType cst2ast(Type t) {
-  throw "Not implemented type: <t>";
+AType cst2ast(Type t) {
+  switch (t) {
+    case (Type)`string`: return strType();
+    case (Type)`integer`: return intType();
+    case (Type)`boolean`: return boolType();
+    default: throw "Not implemented type: <t>";
+  }
 }
