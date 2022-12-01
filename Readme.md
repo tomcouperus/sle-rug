@@ -1,6 +1,13 @@
 # Instructions
 1. Open the rascal terminal.
-2. `import IDE;`
-3. `import ParseTree;`
-4. `loc taxPath = |project://sle-rug/examples/tax.myql|;`
-5. 
+2. `import Syntax;`
+3. `import IDE;`
+4. `import ParseTree;`
+5. `loc taxPath = |project://sle-rug/examples/tax.myql|;`
+6. `start[Form] sf = parse(#start[Form], taxPath);`
+7. `cst2ast(sf);`
+
+
+# Tests
+```test bool function = ast_node := cst2ast;```
+Then run it with `:test`
