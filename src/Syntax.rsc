@@ -22,19 +22,19 @@ syntax Expr
   = "(" Expr ")"
   > "!" Expr
   | "-" Expr
-  > Expr "*" Expr
+  > left (Expr "*" Expr
   | Expr "%" Expr
-  | Expr "/" Expr
-  > Expr "+" Expr
-  | Expr "-" Expr
-  > Expr "\<" Expr
-  | Expr "\<=" Expr
-  > Expr "\>" Expr
-  | Expr "\>=" Expr
-  > Expr "==" Expr
-  | Expr "!=" Expr
-  > Expr "&&" Expr
-  > Expr "||" Expr
+  | Expr "/" Expr)
+  > left (Expr "+" Expr
+  | Expr "-" Expr)
+  > left (Expr "\<" Expr
+  | Expr "\<=" Expr)
+  > left (Expr "\>" Expr
+  | Expr "\>=" Expr)
+  > left (Expr "==" Expr
+  | Expr "!=" Expr)
+  > left Expr "&&" Expr
+  > left Expr "||" Expr
   > Id \ "true" \ "false" // true/false are reserved keywords.
   | Literal
   ;
