@@ -5,7 +5,8 @@
 4. `import ParseTree;`
 5. `loc taxPath = |project://sle-rug/examples/tax.myql|;`
 6. `start[Form] sf = parse(#start[Form], taxPath);`
-7. `cst2ast(sf);`
+7. `import CST2AST;`
+8. `cst2ast(sf);`
 
 
 # Tests

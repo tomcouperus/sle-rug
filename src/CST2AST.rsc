@@ -17,7 +17,7 @@ import ParseTree;
 
 AForm cst2ast(start[Form] sf) {
   Form f = sf.top; // remove layout before and after form
-  return form("", [ ], src=f.src); 
+  return form("<f.name>", [ cst2ast(q) | q <- f.questions], src=f.src); 
 }
 
 default AQuestion cst2ast(Question q) {
