@@ -12,8 +12,8 @@ data AForm(loc src = |tmp:///|)
   ; 
 
 data AQuestion(loc src = |tmp:///|)
-  = question(str prompt, AId id, AType idtype)
-  | calculated(str prompt, AId id, AType idtype, AExpr expr)
+  = question(APrompt prompt, AId id, AType idtype)
+  | calculated(APrompt prompt, AId id, AType idtype, AExpr expr)
   | ifelse(AExpr cond, list[AQuestion] ifs, list[AQuestion] elses)
   ; 
 
@@ -51,6 +51,9 @@ data ALiteral(loc src = |tmp:///|)
   | boolLit(bool boolean)
   ;
 
+data APrompt(loc src = |tmp:///|) 
+  = prompt(str string)
+  ;
 
 data AId(loc src = |tmp:///|)
   = id(str name)

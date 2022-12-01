@@ -23,9 +23,9 @@ AForm cst2ast(start[Form] sf) {
 AQuestion cst2ast(Question q) {
   switch(q) {
     case (Question)`<Prompt p> <Id i> : <Type t>`:
-      return question("<p>", id("<i>", src=i.src), cst2ast(t), src=q.src);
+      return question(prompt("<p>", src=p.src), id("<i>", src=i.src), cst2ast(t), src=q.src);
     case (Question)`<Prompt p> <Id i> : <Type t> = <Expr e>`:
-      return calculated("<p>", id("<i>", src=i.src), cst2ast(t), cst2ast(e), src=q.src);
+      return calculated(prompt("<p>", src=p.src), id("<i>", src=i.src), cst2ast(t), cst2ast(e), src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>}`:
       return ifelse(cst2ast(cond), [ cst2ast(q) | q <- ifqs], [], src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>} else {<Question* elseqs>}`:
