@@ -23,13 +23,13 @@ AForm cst2ast(start[Form] sf) {
 AQuestion cst2ast(Question q) {
   switch(q) {
     case (Question)`<Prompt p> <Id i> : <Type t>`:
-      return question("<p>", id("<i>"), cst2ast(t));
+      return question("<p>", id("<i>", src=i.src), cst2ast(t), src=q.src);
     case (Question)`<Prompt p> <Id i> : <Type t> = <Expr e>`:
-      return calculated("<p>", id("<i>"), cst2ast(t), cst2ast(e));
+      return calculated("<p>", id("<i>", src=i.src), cst2ast(t), cst2ast(e), src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>}`:
-      return ifelse(cst2ast(cond), [ cst2ast(q) | q <- ifqs], []);
+      return ifelse(cst2ast(cond), [ cst2ast(q) | q <- ifqs], [], src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>} else {<Question* elseqs>}`:
-      return ifelse(cst2ast(cond), [cst2ast(q) | q <- ifqs], [cst2ast(q) | q <- elseqs]);
+      return ifelse(cst2ast(cond), [cst2ast(q) | q <- ifqs], [cst2ast(q) | q <- elseqs], src=q.src);
     default: throw "Not implemented question format: <q>";
   }
 }
@@ -44,9 +44,9 @@ AExpr cst2ast(Expr e) {
 }
 AType cst2ast(Type t) {
   switch (t) {
-    case (Type)`string`: return strType();
-    case (Type)`integer`: return intType();
-    case (Type)`boolean`: return boolType();
+    case (Type)`string`: return strType(src=t.src);
+    case (Type)`integer`: return intType(src=t.src);
+    case (Type)`boolean`: return boolType(src=t.src);
     default: throw "Not implemented type: <t>";
   }
 }
