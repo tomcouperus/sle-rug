@@ -34,11 +34,7 @@ syntax Expr
   > left Expr "&&" Expr
   > left Expr "||" Expr
   > Id \ BoolLiteral // true/false are reserved keywords.
-  | Literal
-  ;
-
-syntax Literal
-  = IntLiteral
+  | IntLiteral
   | BoolLiteral
   | StrLiteral
   ;
