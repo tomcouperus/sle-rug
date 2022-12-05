@@ -4,6 +4,8 @@ import Syntax;
 import AST;
 
 import ParseTree;
+import String;
+import Boolean;
 
 /*
  * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
@@ -27,21 +29,53 @@ AQuestion cst2ast(Question q) {
     case (Question)`<Prompt p> <Id i> : <Type t> = <Expr e>`:
       return calculated(prompt("<p>", src=p.src), id("<i>", src=i.src), cst2ast(t), cst2ast(e), src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>}`:
-      return ifelse(cst2ast(cond), [ cst2ast(q) | q <- ifqs], [], src=q.src);
+      return ifelse(cst2ast(cond), [ cst2ast(q) | Question q <- ifqs], [], src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>} else {<Question* elseqs>}`:
-      return ifelse(cst2ast(cond), [cst2ast(q) | q <- ifqs], [cst2ast(q) | q <- elseqs], src=q.src);
+      return ifelse(cst2ast(cond), [cst2ast(q) | Question q <- ifqs], [cst2ast(q) | q <- elseqs], src=q.src);
     default: throw "Not implemented question format: <q>";
   }
 }
 
 AExpr cst2ast(Expr e) {
   switch (e) {
-    case (Expr)`<Id x>`: return ref(id("<x>", src=x.src), src=x.src);
-    // etc.
-    
+    case (Expr)`<Expr lhs> * <Expr rhs>` : 
+      return binop(cst2ast(lhs), mult(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> % <Expr rhs>` : 
+      return binop(cst2ast(lhs), modulo(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> / <Expr rhs>` : 
+      return binop(cst2ast(lhs), div(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> + <Expr rhs>` : 
+      return binop(cst2ast(lhs), add(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> - <Expr rhs>` : 
+      return binop(cst2ast(lhs), bMinus(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> \< <Expr rhs>` : 
+      return binop(cst2ast(lhs), less(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> \<= <Expr rhs>` : 
+      return binop(cst2ast(lhs), leq(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> \> <Expr rhs>` : 
+      return binop(cst2ast(lhs), greater(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> \>= <Expr rhs>` : 
+      return binop(cst2ast(lhs), geq(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> == <Expr rhs>` : 
+      return binop(cst2ast(lhs), eq(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> != <Expr rhs>` : 
+      return binop(cst2ast(lhs), neq(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> && <Expr rhs>` : 
+      return binop(cst2ast(lhs), land(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Expr lhs> || <Expr rhs>` : 
+      return binop(cst2ast(lhs), lor(), cst2ast(rhs), src=e.src);
+    case (Expr)`<Id x>`: 
+      return ref(id("<x>", src=x.src), src=x.src);
+    case (Expr)`<IntLiteral iLit>`: 
+      return lit(intLit(toInt("<iLit>"), src=iLit.src), src=iLit.src);
+    case (Expr)`<BoolLiteral bLit>`: 
+      return lit(boolLit(fromString("<bLit>"), src=bLit.src), src=bLit.src);
+    case (Expr)`<StrLiteral sLit>`: 
+      return lit(strLit("<sLit>", src=sLit.src), src=sLit.src);
     default: throw "Unhandled expression: <e>";
   }
 }
+
 AType cst2ast(Type t) {
   switch (t) {
     case (Type)`string`: return strType(src=t.src);
