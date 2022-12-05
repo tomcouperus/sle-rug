@@ -57,7 +57,8 @@ AExpr cst2ast(Expr e) {
     case (Expr)`<Id x>`: return ref(id("<x>", src=x.src), src=x.src);
     case (Expr)`<StrLiteral sLit>`: return lit(strLit("<sLit>", src=sLit.src), src=sLit.src);
     case (Expr)`<IntLiteral iLit>`: return lit(intLit(toInt("<iLit>"), src=iLit.src), src=iLit.src);
-    case (Expr)`<BoolLiteral bLit>`: return lit(boolLit(fromString("<bLit>"), src=bLit.src), src=bLit.src);
+    case (Expr)`true`: return lit(boolLit(true, src=e.src), src=e.src);
+    case (Expr)`false`: return lit(boolLit(false, src=e.src), src=e.src);
     default: throw "Unhandled expression: <e>";
   }
 }
