@@ -1,6 +1,6 @@
 form taxOfficeExample { 
   "Did you buy a house in 2010?"
-    hasBoughtHouse: boolean
+    hasBoughtHouse: boolean = false
     
   "Did you enter a loan?"
     hasMaintLoan: boolean
