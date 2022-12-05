@@ -31,7 +31,7 @@ AQuestion cst2ast(Question q) {
     case (Question)`if (<Expr cond>) {<Question* ifqs>}`:
       return ifelse(cst2ast(cond), [ cst2ast(q) | Question q <- ifqs], [], src=q.src);
     case (Question)`if (<Expr cond>) {<Question* ifqs>} else {<Question* elseqs>}`:
-      return ifelse(cst2ast(cond), [cst2ast(q) | Question q <- ifqs], [cst2ast(q) | q <- elseqs], src=q.src);
+      return ifelse(cst2ast(cond), [cst2ast(q) | Question q <- ifqs], [cst2ast(q) | Question q <- elseqs], src=q.src);
     default: throw "Not implemented question format: <q>";
   }
 }
