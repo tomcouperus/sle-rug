@@ -14,6 +14,10 @@
 13. `cst2ast(cycsf);`
 14. `cst2ast(taxsf);`
 
+## For long output, do the following
+1. `import IO;`
+2. `iprintln($$$)`
+
 
 # Tests
 ```test bool function = ast_node := cst2ast;```
