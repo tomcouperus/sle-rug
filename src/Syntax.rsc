@@ -11,7 +11,8 @@ start syntax Form = "form" Id name "{" Question* questions "}";
 
 syntax Question 
   = Prompt prompt Id param ":" Type ("=" Expr)?
-  | "if" "(" Expr condition ")" "{" Question* ifQuestions "}" ("else" "{" Question* elseQuestions "}")?
+  | "if" "(" Expr condition ")" "{" Question* ifQuestions "}" "else" "{" Question* elseQuestions "}"
+  > "if" "(" Expr condition ")" "{" Question* ifQuestions "}"
   ;
 
 syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
