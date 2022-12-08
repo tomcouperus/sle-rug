@@ -70,7 +70,7 @@ set[Message] checkTypeRedefinition(AQuestion q1, TEnv tenv) {
   set[Message] msgs = {};
   for (q2 <- tenv) {
     if (q1.id.name == q2.name && convert(q1.idtype) != q2.\type) {
-      msgs += error("Type redefinition: <q1.id.name>: <typeString(convert(q1.idtype))> to <typeString(q2.\type)>", 
+      msgs += error("Type redefinition. Earlier defined as <typeString(convert(q1.idtype))>", 
         q2.def);
       break;
     }
@@ -84,7 +84,10 @@ set[Message] checkDuplicatePrompts(AQuestion q, TEnv tenv) {
   bool first = true;
   for(q2 <- tenv) {
     if (q2.prompt == q.prompt.string) {
-      if (!first) msgs += warning("Duplicate prompts", q.prompt.src);
+      if (!first) {
+        msgs += warning("Duplicate prompt", q.prompt.src);
+        break;
+      }
       first = false;
     }
   }
