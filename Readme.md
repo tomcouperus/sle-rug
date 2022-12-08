@@ -9,10 +9,11 @@
 8. `start[Form] binsf = parse(#start[Form], binPath);`
 9. `start[Form] cycsf = parse(#start[Form], cycPath);`
 10. `start[Form] taxsf = parse(#start[Form], taxPath);`
-11. `import CST2AST;`
-12. `cst2ast(binsf);`
-13. `cst2ast(cycsf);`
-14. `cst2ast(taxsf);`
+11. `import AST;`
+12. `import CST2AST;`
+13. `AForm binaf = cst2ast(binsf);`
+14. `AForm cycaf = cst2ast(cycsf);`
+15. `AForm taxaf = cst2ast(taxsf);`
 
 ## For long output, do the following
 1. `import IO;`
