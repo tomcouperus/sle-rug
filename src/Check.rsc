@@ -11,13 +11,26 @@ data Type
   | tunknown()
   ;
 
+Type convert(AType t) {
+  switch (t) {
+    case strType(): return tstr();
+    case intType(): return tint();
+    case boolType(): return tbool();
+    default: return tunknown();
+  }
+}
+
 // the type environment consisting of defined questions in the form 
 alias TEnv = rel[loc def, str name, str prompt, Type \type];
 
 // To avoid recursively traversing the form, use the `visit` construct
 // or deep match (e.g., `for (/question(...) := f) {...}` ) 
 TEnv collect(AForm f) {
-  return {}; 
+  return { <t.src, id.name, p.string, convert(t)> | 
+    /question(APrompt p, AId id, AType t) := f }
+       + {<t.src, id.name, p.string, convert(t)> | 
+    /calculated(APrompt p, AId id, AType t, _) := f}
+    ; 
 }
 
 set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
