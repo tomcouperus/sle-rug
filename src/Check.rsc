@@ -96,8 +96,10 @@ set[Message] checkDuplicatePrompts(AQuestion q, TEnv tenv) {
   return msgs; 
 }
 
-set[Message] checkComputedExprType() {
+set[Message] checkComputedExprType(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
+  if (convert(q.idtype) == typeOf(q.expr, tenv, useDef))
+    msgs += error("Type of id does not match type of expression");
   return msgs; 
 }
 
