@@ -15,16 +15,16 @@
 14. `AForm cycaf = cst2ast(cycsf);`
 15. `AForm taxaf = cst2ast(taxsf);`
 16. `import Resolve;`
-17. `RefGraph binrg = resolve(binaf)`
-18. `RefGraph cycrg = resolve(cycaf)`
-19. `RefGraph taxrg = resolve(taxaf)`
+17. `RefGraph binrg = resolve(binaf);`
+18. `RefGraph cycrg = resolve(cycaf);`
+19. `RefGraph taxrg = resolve(taxaf);`
 20. `import Check;`
 21. `TEnv binte = collect(binaf);`
 22. `TEnv cycte = collect(cycaf);`
 23. `TEnv taxte = collect(taxaf);`
-24. `check(binaf, binte, binrg.useDef)`
-25. `check(cycaf, cycte, cycrg.useDef)`
-26. `check(taxaf, taxte, taxrg.useDef)`
+24. `check(binaf, binte, binrg.useDef);`
+25. `check(cycaf, cycte, cycrg.useDef);`
+26. `check(taxaf, taxte, taxrg.useDef);`
 
 ## For long output, do the following
 1. `import IO;`
