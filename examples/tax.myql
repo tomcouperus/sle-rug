@@ -2,11 +2,15 @@ form taxOfficeExample {
   "Did you buy a house in 2010?"
     hasBoughtHouse: boolean
     
-   
+  "duplicate hasBoughtHouse"
+    hasBoughtHouse: integer
     // akjsdhakjshdkjsa
     
   "Did you enter a loan?"
     hasMaintLoan: boolean
+
+  "Did you enter a loan?"
+    maybe: boolean
     
   "Did you sell a house in 2010?"
     hasSoldHouse: boolean    
@@ -18,6 +22,8 @@ form taxOfficeExample {
       privateDebt: integer
     "Value residue:"
       valueResidue: integer = sellingPrice - privateDebt
+    "wrong calculated type"
+      result: integer = true && false
       
   }
 }

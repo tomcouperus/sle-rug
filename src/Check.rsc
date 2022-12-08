@@ -51,19 +51,16 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
   return msgs; 
 }
 
-// - produce an error if there are declared questions with the same name but different types.
-// - duplicate prompts should trigger a warning 
-// - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
   if (/ifelse(_, _, _) := q) {
     return msgs;
   } else {
     msgs += checkTypeRedefinition(q, tenv);
-    msgs += checkDuplicatePrompts();
+    msgs += checkDuplicatePrompts(q, tenv);
     msgs += checkComputedExprType();
   }
-  return msgs; 
+  return msgs;
 }
 
 set[Message] checkTypeRedefinition(AQuestion q1, TEnv tenv) {
@@ -72,14 +69,22 @@ set[Message] checkTypeRedefinition(AQuestion q1, TEnv tenv) {
     if (q1.id.name == q2.name && convert(q1.idtype) != q2.\type) {
       msgs += error("Type redefinition: <q1.id.name>: <typeString(convert(q1.idtype))> to <typeString(q2.\type)>", 
         q2.def);
+      break;
     }
     continue;
   }
   return msgs; 
 }
 
-set[Message] checkDuplicatePrompts() {
+set[Message] checkDuplicatePrompts(AQuestion q, TEnv tenv) {
   set[Message] msgs = {};
+  bool first = true;
+  for(q2 <- tenv) {
+    if (q2.prompt == q.prompt.string) {
+      if (!first) msgs += warning("Duplicate prompts", q.prompt.src);
+      first = false;
+    }
+  }
   return msgs; 
 }
 
