@@ -61,7 +61,9 @@ set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   } else {
     msgs += checkTypeRedefinition(q, tenv);
     msgs += checkDuplicatePrompts(q, tenv);
-    msgs += checkComputedExprType();
+  }
+  if(/calculated(_, _, _, _) := q) {
+    msgs += checkComputedExprType(q, tenv, useDef);
   }
   return msgs;
 }
