@@ -73,3 +73,14 @@ Context-free grammars used for structured and nested concepts
 ## Lecture 3
 No notes
 
+## Lecture 4
+Early error detecting.
+
+### Static checking
+- Static checking phase acts as a contract
+- Further language processors can assume that the program is semantically well formed:
+  - all variables declared
+  - all expressions have correct type
+  - ...
+
+It helps users and simplifies back-end engineering.
