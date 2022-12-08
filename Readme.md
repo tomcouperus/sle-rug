@@ -22,3 +22,8 @@
 # Tests
 ```test bool function = ast_node := cst2ast;```
 Then run it with `:test`
+
+# Pretty print
+1. `import vis::Text;`
+2. `prettyTree(parseTree)`
+3. `prettyNode(ast)` 
