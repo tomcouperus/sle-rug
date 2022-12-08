@@ -51,6 +51,9 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
   return msgs; 
 }
 
+// - produce an error if there are declared questions with the same name but different types.
+// - duplicate prompts should trigger a warning 
+// - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
   if (/ifelse(_, _, _) := q) {
