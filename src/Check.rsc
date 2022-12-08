@@ -12,7 +12,7 @@ data Type
   ;
 
 // the type environment consisting of defined questions in the form 
-alias TEnv = rel[loc def, str name, str label, Type \type];
+alias TEnv = rel[loc def, str name, str prompt, Type \type];
 
 // To avoid recursively traversing the form, use the `visit` construct
 // or deep match (e.g., `for (/question(...) := f) {...}` ) 
@@ -25,7 +25,7 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
 }
 
 // - produce an error if there are declared questions with the same name but different types.
-// - duplicate labels should trigger a warning 
+// - duplicate prompts should trigger a warning 
 // - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   return {}; 
