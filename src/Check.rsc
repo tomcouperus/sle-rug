@@ -26,9 +26,9 @@ alias TEnv = rel[loc def, str name, str prompt, Type \type];
 // To avoid recursively traversing the form, use the `visit` construct
 // or deep match (e.g., `for (/question(...) := f) {...}` ) 
 TEnv collect(AForm f) {
-  return { <t.src, id.name, p.string, convert(t)> | 
+  return { <id.src, id.name, p.string, convert(t)> | 
     /question(APrompt p, AId id, AType t) := f }
-       + {<t.src, id.name, p.string, convert(t)> | 
+       + {<id.src, id.name, p.string, convert(t)> | 
     /calculated(APrompt p, AId id, AType t, _) := f}
     ; 
 }
@@ -41,13 +41,23 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
   return msgs; 
 }
 
-set[Message] checkTypeRedefinition() {
+set[Message] checkTypeRedefinition(AQuestion q, TEnv tenv) {
   set[Message] msgs = {};
+  for(str name <- tenv.name) {
+    ;
+  }
   return msgs; 
 }
 
-set[Message] checkDuplicatePrompts() {
+set[Message] checkDuplicatePrompts(AQuestion q, TEnv tenv) {
   set[Message] msgs = {};
+  bool first = true;
+  for(q2 <- tenv) {
+    if (q2.prompt == q.prompt.string) {
+      if (!first) msgs += warning("Duplicate prompts", q.prompt.src);
+      first = false;
+    }
+  }
   return msgs; 
 }
 
@@ -61,9 +71,13 @@ set[Message] checkComputedExprType() {
 // - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
-  msgs += checkTypeRedefinition();
-  msgs += checkDuplicatePrompts();
-  msgs += checkComputedExprType();
+  if(/ifelse(_, _, _) := q) {
+    return msgs;
+  } else {
+    msgs += checkTypeRedefinition(q, tenv);
+    msgs += checkDuplicatePrompts(q, tenv);
+    msgs += checkComputedExprType();
+  }
   return msgs; 
 }
 
