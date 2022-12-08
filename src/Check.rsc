@@ -34,14 +34,37 @@ TEnv collect(AForm f) {
 }
 
 set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
-  return {}; 
+  set[Message] msgs = {};
+  for (AQuestion q <- f.questions) {
+    msgs += check(q, tenv, useDef);
+  }
+  return msgs; 
+}
+
+set[Message] checkTypeRedefinition() {
+  set[Message] msgs = {};
+  return msgs; 
+}
+
+set[Message] checkDuplicatePrompts() {
+  set[Message] msgs = {};
+  return msgs; 
+}
+
+set[Message] checkComputedExprType() {
+  set[Message] msgs = {};
+  return msgs; 
 }
 
 // - produce an error if there are declared questions with the same name but different types.
 // - duplicate prompts should trigger a warning 
 // - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
-  return {}; 
+  set[Message] msgs = {};
+  msgs += checkTypeRedefinition();
+  msgs += checkDuplicatePrompts();
+  msgs += checkComputedExprType();
+  return msgs; 
 }
 
 // Check operand compatibility with operators.
