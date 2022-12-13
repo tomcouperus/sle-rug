@@ -98,8 +98,8 @@ set[Message] checkDuplicatePrompts(AQuestion q, TEnv tenv) {
 
 set[Message] checkComputedExprType(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
-  if (convert(q.idtype) == typeOf(q.expr, tenv, useDef))
-    msgs += error("Type of id does not match type of expression");
+  if (convert(q.idtype) != typeOf(q.expr, tenv, useDef))
+    msgs += error("Type of id does not match type of expression", q.expr.src);
   return msgs; 
 }
 
@@ -121,13 +121,48 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
 
 Type typeOf(AExpr e, TEnv tenv, UseDef useDef) {
   switch (e) {
+    case unop(uNot(),_): 
+      return tbool;
+    case unop(uMinus(),_): 
+      return tint;
+    case binop(_, ABinOperator binop, _):
+      return typeOf(binop);
     case ref(id(_, src = loc u)):  
       if (<u, loc d> <- useDef, <d, x, _, Type t> <- tenv) {
         return t;
       }
-    // etc.
+    case lit(ALiteral lit):
+      return typeOf(lit);
   }
   return tunknown(); 
+}
+
+Type typeOf(ABinOperator binop) {
+  switch (binop) {
+    case mult(): return tint();
+    case modulo(): return tint();
+    case div(): return tint();
+    case add(): return tint();
+    case bMinus(): return tint();
+    case less(): return tbool();
+    case leq(): return tbool();
+    case greater(): return tbool();
+    case geq(): return tbool();
+    case eq(): return tbool();
+    case neq(): return tbool();
+    case land(): return tbool();
+    case lor(): return tbool();
+    default: return tunknown();
+  }
+}
+
+Type typeOf(ALiteral lit) {
+  switch (lit) {
+    case strLit(_): return tstr();
+    case intLit(_): return tint();
+    case boolLit(_): return tbool();
+    default: return tunknown();
+  }
 }
 
 /* 
