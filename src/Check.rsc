@@ -62,8 +62,9 @@ set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
     msgs += checkTypeRedefinition(q, tenv);
     msgs += checkDuplicatePrompts(q, tenv);
   }
-  if(/calculated(_, _, _, _) := q) {
+  if(/calculated(_, _, _, AExpr expr) := q) {
     msgs += checkComputedExprType(q, tenv, useDef);
+    msgs += check(expr, tenv, useDef);
   }
   return msgs;
 }
@@ -110,6 +111,19 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
   
   switch (e) {
+    case unop(uNot(), AExpr rhs): {
+      msgs += check(rhs, tenv, useDef);
+      if(typeOf(rhs, tenv, useDef) != tbool()) {
+        msgs += error("Wrong expression type with operand. ", unop.src);
+      }
+    }
+    case binop(AExpr lhs, ABinOperator binop, AExpr rhs): {
+      msgs += check(lhs, tenv, useDef);
+      msgs += check(rhs, tenv, useDef);
+      if((typeOf(rhs, tenv, useDef) != typeOf(binop)) || (typeOf(lhs, tenv, useDef) != typeOf(binop)) ) {
+        msgs += error("Wrong expression type with operand", binop.src);
+      }
+    }
     case ref(AId x):
       msgs += { error("Undeclared question", x.src) | useDef[x.src] == {} };
 
