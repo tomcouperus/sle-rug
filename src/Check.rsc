@@ -56,7 +56,14 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
 // - the declared type computed questions should match the type of the expression.
 set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
   set[Message] msgs = {};
-  if (/ifelse(_, _, _) := q) {
+  if (/ifelse(AExpr cond, list[AQuestion] ifqs, list[AQuestion] elseqs) := q) {
+    msgs += check(cond, tenv, useDef);
+    for (ifq <- ifqs) {
+      msgs += check(ifq, tenv, useDef);
+    }
+    for (elseq <- elseqs) {
+      msgs += check(elseq, tenv, useDef);
+    }
     return msgs;
   } else {
     msgs += checkTypeRedefinition(q, tenv);
@@ -117,6 +124,12 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
         msgs += error("Wrong expression type with operand. ", unop.src);
       }
     }
+    case unop(uMinus(), AExpr rhs): {
+      msgs += check(rhs, tenv, useDef);
+      if(typeOf(rhs, tenv, useDef) != tint()) {
+        msgs += error("Wrong expression type with operand. ", unop.src);
+      }
+    }
     case binop(AExpr lhs, ABinOperator binop, AExpr rhs): {
       msgs += check(lhs, tenv, useDef);
       msgs += check(rhs, tenv, useDef);
@@ -126,8 +139,6 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
     }
     case ref(AId x):
       msgs += { error("Undeclared question", x.src) | useDef[x.src] == {} };
-
-    // etc.
   }
   
   return msgs; 
