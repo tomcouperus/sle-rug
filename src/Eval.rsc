@@ -56,8 +56,19 @@ VEnv eval(AForm f, Input inp, VEnv venv) {
   }
 }
 
+int typeOf(Value v) {
+  switch (v) {
+    case vint(_): return 0;
+    case vbool(_): return 1;
+    case vstr(_): return 2;
+    default: return -1;
+  }
+}
+
 VEnv evalOnce(AForm f, Input inp, VEnv venv) {
-  if (inp.\value != venv[inp.question]) {
+  println(inp);
+  println(venv);
+  if (typeOf(inp.\value) != typeOf(venv[inp.question])) {
     println("Type error");
     return venv;
   }
@@ -71,10 +82,10 @@ VEnv eval(AQuestion q, Input inp, VEnv venv) {
   str name = inp.question;
   switch (q) {
     case question(_, id(name) ,_): venv[name] = inp.\value;
-    case calculated(_,_,_,_): return ();
-    case ifelse(_,_,_): return ();
+    case calculated(_,_,_,_): return venv;
+    case ifelse(_,_,_): return venv;
   }
-  return (); 
+  return venv; 
 }
 
 Value eval(AExpr e, VEnv venv) {
