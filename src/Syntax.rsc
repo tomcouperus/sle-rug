@@ -7,13 +7,12 @@ extend lang::std::Id;
  * Concrete syntax of QL
  */
 
-start syntax Form = "form" Id name QuestionBlock; 
-
-syntax QuestionBlock = "{" Question* questions "}";
+start syntax Form = "form" Id name "{" Question* questions "}"; 
 
 syntax Question 
   = Prompt prompt Id param ":" Type ("=" Expr)?
-  | "if" "(" Expr ")" QuestionBlock ("else" QuestionBlock)?
+  | "if" "(" Expr condition ")" "{" Question* ifQuestions "}" "else" "{" Question* elseQuestions "}"
+  > "if" "(" Expr condition ")" "{" Question* ifQuestions "}"
   ;
 
 syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
@@ -21,26 +20,24 @@ syntax Prompt = "\"" [a-zA-Z0-9?:]+ "\"";
 syntax Expr 
   = "(" Expr ")"
   > "!" Expr
-  > left Expr BinOperator Expr
   | "-" Expr
-  > Id \ "true" \ "false" // true/false are reserved keywords.
-  | Literal
-  ;
-
-syntax BinOperator
-  = "*" | "%" | "/"
-  > "+" | "-"
-  > "\<" | "\<="
-  > "\>" | "\>="
-  > "==" | "!="
-  > "&&"
-  > "||"
-  ;
-
-syntax Literal
-  = IntLiteral
-  | BoolLiteral
+  > left (Expr "*" Expr
+  | Expr "%" Expr
+  | Expr "/" Expr)
+  > left (Expr "+" Expr
+  | Expr "-" Expr)
+  > left (Expr "\<" Expr
+  | Expr "\<=" Expr)
+  > left (Expr "\>" Expr
+  | Expr "\>=" Expr)
+  > left (Expr "==" Expr
+  | Expr "!=" Expr)
+  > left Expr "&&" Expr
+  > left Expr "||" Expr
+  > Id \ BoolLiteral // true/false are reserved keywords.
   | StrLiteral
+  | IntLiteral
+  | BoolLiteral
   ;
 
 syntax Type 
@@ -55,4 +52,4 @@ lexical Int = "integer";
 syntax IntLiteral = [0-9]+;
 
 lexical Bool = "boolean";
-syntax BoolLiteral = "true" | "false";
+keyword BoolLiteral = "true" | "false";
