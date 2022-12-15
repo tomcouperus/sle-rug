@@ -66,8 +66,6 @@ int typeOf(Value v) {
 }
 
 VEnv evalOnce(AForm f, Input inp, VEnv venv) {
-  println(inp);
-  println(venv);
   if (typeOf(inp.\value) != typeOf(venv[inp.question])) {
     println("Type error");
     return venv;
@@ -82,17 +80,20 @@ VEnv eval(AQuestion q, Input inp, VEnv venv) {
   str name = inp.question;
   switch (q) {
     case question(_, id(name) ,_): venv[name] = inp.\value;
-    case calculated(_,_,_,_): return venv;
-    case ifelse(_,_,_): return venv;
+    case calculated(_, id(str calcName),_, AExpr e): return venv[calcName] = eval(e, venv);
+    case ifelse(AExpr cond, list[AQuestion] ifqs, list[AQuestion] elseqs): {
+      if (eval(cond, venv).b) for (ifq <- ifqs) venv = eval(ifq, inp, venv);
+      else for (elseq <- elseqs) venv = eval(elseq, inp, venv);
+      return venv;
+    }
   }
   return venv; 
 }
 
 Value eval(AExpr e, VEnv venv) {
   switch (e) {
+    case unop(uNot(), AExpr rhs): return vbool(!eval(rhs, venv).b);
     case ref(id(str x)): return venv[x];
-    
-    // etc.
     
     default: throw "Unsupported expression <e>";
   }
