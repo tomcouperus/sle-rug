@@ -84,3 +84,22 @@ Early error detecting.
   - ...
 
 It helps users and simplifies back-end engineering.
+
+## Lecture 5
+Semantics
+
+### Formal semantics
+Needed to prove things as determinism, type soundness or to simulate and explore (using redex) or to generate an interpreter. To reduce duplicate segments with different tradeoffs. You could just write it once, and the other aspects are generated.
+
+### Big step and small step
+#### Big step
+Immediately goes to the final result of an expression
+
+#### Small step
+Goes in single steps. 
+
+#### In code
+- big step: eval(exp, env, store) -> <value, store>
+- small step: step(exp, env, store) -> <exp, store>
+- denotational: map(exp) -> (env X store -> store) Modularity is nice, but performance is horrendous
+
