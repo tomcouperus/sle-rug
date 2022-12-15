@@ -27,7 +27,22 @@ data Input
 // produce an environment which for each question has a default value
 // (e.g. 0 for int, "" for str etc.)
 VEnv initialEnv(AForm f) {
-  return ();
+  VEnv init = ();
+  for (/question(_, AId id, AType t) := f) {
+    switch (t) {
+      case strType(): init[id.name] = vstr("");
+      case intType(): init[id.name] = vint(0);
+      case boolType(): init[id.name] = vbool(false);
+    }
+  }
+  for (/calculated(_, AId id, AType t, _) := f) {
+    switch (t) {
+      case strType(): init[id.name] = vstr("");
+      case intType(): init[id.name] = vint(0);
+      case boolType(): init[id.name] = vbool(false);
+    }
+  }
+  return init;
 }
 
 
