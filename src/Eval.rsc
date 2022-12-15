@@ -3,6 +3,8 @@ module Eval
 import AST;
 import Resolve;
 
+import IO;
+
 /*
  * Implement big-step semantics for QL
  */
@@ -55,12 +57,23 @@ VEnv eval(AForm f, Input inp, VEnv venv) {
 }
 
 VEnv evalOnce(AForm f, Input inp, VEnv venv) {
-  return (); 
+  if (inp.\value != venv[inp.question]) {
+    println("Type error");
+    return venv;
+  }
+  for(q <- f.questions) venv = eval(q, inp, venv);
+  return venv; 
 }
 
 VEnv eval(AQuestion q, Input inp, VEnv venv) {
   // evaluate conditions for branching,
   // evaluate inp and computed questions to return updated VEnv
+  str name = inp.question;
+  switch (q) {
+    case question(_, id(name) ,_): venv[name] = inp.\value;
+    case calculated(_,_,_,_): return ();
+    case ifelse(_,_,_): return ();
+  }
   return (); 
 }
 
