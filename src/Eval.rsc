@@ -103,8 +103,24 @@ Value eval(AExpr e, VEnv venv) {
     case binop(AExpr lhs, leq(), AExpr rhs):     return vbool(eval(lhs, venv).n <= eval(rhs, venv).n);
     case binop(AExpr lhs, greater(), AExpr rhs): return vbool(eval(lhs, venv).n > eval(rhs, venv).n);
     case binop(AExpr lhs, geq(), AExpr rhs):     return vbool(eval(lhs, venv).n >= eval(rhs, venv).n);
-    case binop(AExpr lhs, eq(), AExpr rhs):      return vbool(eval(lhs, venv).b == eval(rhs, venv).b); //TODO add support for both bool and int
-    case binop(AExpr lhs, neq(), AExpr rhs):     return vbool(eval(lhs, venv).b != eval(rhs, venv).b);
+    case binop(AExpr lhs, eq(), AExpr rhs):      {
+      Value lhsRes = eval(lhs, venv);
+      Value rhsRes = eval(rhs, venv);
+      if (typeOf(lhsRes) == typeOf(vint(0))) {
+        return vbool(lhsRes.n == rhsRes.n);
+      } else {
+        return vbool(lhsRes.b == rhsRes.b);
+      }
+    }
+    case binop(AExpr lhs, neq(), AExpr rhs):     {
+      Value lhsRes = eval(lhs, venv);
+      Value rhsRes = eval(rhs, venv);
+      if (typeOf(lhsRes) == typeOf(vint(0))) {
+        return vbool(lhsRes.n == rhsRes.n);
+      } else {
+        return vbool(lhsRes.b == rhsRes.b);
+      }
+    }
     case binop(AExpr lhs, land(), AExpr rhs):    return vbool(eval(lhs, venv).b && eval(rhs, venv).b);
     case binop(AExpr lhs, lor(), AExpr rhs):     return vbool(eval(lhs, venv).b || eval(rhs, venv).b);
     case lit(strLit(str string)):                return vstr(string);
