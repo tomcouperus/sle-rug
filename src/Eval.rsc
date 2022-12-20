@@ -92,25 +92,25 @@ VEnv eval(AQuestion q, Input inp, VEnv venv) {
 
 Value eval(AExpr e, VEnv venv) {
   switch (e) {
-    case unop(uNot(), AExpr rhs): return vbool(!eval(rhs, venv).b);
-    case unop(uMinus(), AExpr rhs): return vint(-eval(rhs, venv).n);
-    case binop(AExpr lhs, mult(), AExpr rhs): return vint(eval(lhs, venv).n * eval(rhs, venv).n);
-    case binop(AExpr lhs, modulo(), AExpr rhs): return vint(eval(lhs, venv).n % eval(rhs, venv).n);
-    case binop(AExpr lhs, div(), AExpr rhs): return vint(eval(lhs, venv).n / eval(rhs, venv).n);
-    case binop(AExpr lhs, add(), AExpr rhs): return vint(eval(lhs, venv).n + eval(rhs, venv).n);
-    case binop(AExpr lhs, bMinus(), AExpr rhs): return vint(eval(lhs, venv).n - eval(rhs, venv).n);
-    case binop(AExpr lhs, less(), AExpr rhs): return vbool(eval(lhs, venv).b < eval(rhs, venv).b);
-    case binop(AExpr lhs, leq(), AExpr rhs): return vbool(eval(lhs, venv).b <= eval(rhs, venv).b);
-    case binop(AExpr lhs, greater(), AExpr rhs): return vbool(eval(lhs, venv).b > eval(rhs, venv).b);
-    case binop(AExpr lhs, geq(), AExpr rhs): return vbool(eval(lhs, venv).b >= eval(rhs, venv).b);
-    case binop(AExpr lhs, eq(), AExpr rhs): return vbool(eval(lhs, venv).b == eval(rhs, venv).b);
-    case binop(AExpr lhs, neq(), AExpr rhs): return vbool(eval(lhs, venv).b != eval(rhs, venv).b);
-    case binop(AExpr lhs, land(), AExpr rhs): return vbool(eval(lhs, venv).b && eval(rhs, venv).b);
-    case binop(AExpr lhs, lor(), AExpr rhs): return vbool(eval(lhs, venv).b || eval(rhs, venv).b);
-    case lit(strLit(str string)): return vstr(string);
-    case lit(intLit(int number)): return vint(number);
-    case lit(boolLit(bool boolean)): return vbool(boolean);
-    case ref(id(str x)): return venv[x];
+    case unop(uNot(), AExpr rhs):                return vbool(!eval(rhs, venv).b);
+    case unop(uMinus(), AExpr rhs):              return vint(-eval(rhs, venv).n);
+    case binop(AExpr lhs, mult(), AExpr rhs):    return vint(eval(lhs, venv).n * eval(rhs, venv).n);
+    case binop(AExpr lhs, modulo(), AExpr rhs):  return vint(eval(lhs, venv).n % eval(rhs, venv).n);
+    case binop(AExpr lhs, div(), AExpr rhs):     return vint(eval(lhs, venv).n / eval(rhs, venv).n);
+    case binop(AExpr lhs, add(), AExpr rhs):     return vint(eval(lhs, venv).n + eval(rhs, venv).n);
+    case binop(AExpr lhs, bMinus(), AExpr rhs):  return vint(eval(lhs, venv).n - eval(rhs, venv).n);
+    case binop(AExpr lhs, less(), AExpr rhs):    return vbool(eval(lhs, venv).n < eval(rhs, venv).n);
+    case binop(AExpr lhs, leq(), AExpr rhs):     return vbool(eval(lhs, venv).n <= eval(rhs, venv).n);
+    case binop(AExpr lhs, greater(), AExpr rhs): return vbool(eval(lhs, venv).n > eval(rhs, venv).n);
+    case binop(AExpr lhs, geq(), AExpr rhs):     return vbool(eval(lhs, venv).n >= eval(rhs, venv).n);
+    case binop(AExpr lhs, eq(), AExpr rhs):      return vbool(eval(lhs, venv).b == eval(rhs, venv).b); //TODO add support for both bool and int
+    case binop(AExpr lhs, neq(), AExpr rhs):     return vbool(eval(lhs, venv).b != eval(rhs, venv).b);
+    case binop(AExpr lhs, land(), AExpr rhs):    return vbool(eval(lhs, venv).b && eval(rhs, venv).b);
+    case binop(AExpr lhs, lor(), AExpr rhs):     return vbool(eval(lhs, venv).b || eval(rhs, venv).b);
+    case lit(strLit(str string)):                return vstr(string);
+    case lit(intLit(int number)):                return vint(number);
+    case lit(boolLit(bool boolean)):             return vbool(boolean);
+    case ref(id(str x)):                         return venv[x];
     
     default: throw "Unsupported expression <e>";
   }
