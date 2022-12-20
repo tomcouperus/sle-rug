@@ -121,20 +121,87 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
     case unop(uNot(), AExpr rhs): {
       msgs += check(rhs, tenv, useDef);
       if(typeOf(rhs, tenv, useDef) != tbool()) {
-        msgs += error("Wrong expression type with operand. ", unop.src);
+        msgs += error("Wrong expression type with operand", unop.src);
       }
     }
     case unop(uMinus(), AExpr rhs): {
       msgs += check(rhs, tenv, useDef);
       if(typeOf(rhs, tenv, useDef) != tint()) {
-        msgs += error("Wrong expression type with operand. ", unop.src);
+        msgs += error("Wrong expression type with operand", unop.src);
       }
     }
     case binop(AExpr lhs, ABinOperator binop, AExpr rhs): {
       msgs += check(lhs, tenv, useDef);
       msgs += check(rhs, tenv, useDef);
-      if((typeOf(rhs, tenv, useDef) != typeOf(binop)) || (typeOf(lhs, tenv, useDef) != typeOf(binop)) ) {
-        msgs += error("Wrong expression type with operand", binop.src);
+      Type lhsType = typeOf(lhs, tenv, useDef);
+      Type rhsType = typeOf(rhs, tenv, useDef);
+      switch(binop) {
+        case mult(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("multiplication operator requires integer type operands", binop.src);
+          }
+        }
+        case modulo(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("modulo operator requires integer type operands", binop.src);
+          }
+        }
+        case div(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("division operator requires integer type operands", binop.src);
+          }
+        }
+        case add(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("addition operator requires integer type operands", binop.src);
+          }
+        }
+        case bMinus(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("minus operator requires integer type operands", binop.src);
+          }
+        }
+        case less(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("less than comparison requires integer type operands", binop.src);
+          }
+        }
+        case leq(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("less than or equal comparison requires integer type operands", binop.src);
+          }
+        }
+        case greater(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("greater than comparison requires integer type operands", binop.src);
+          }
+        }
+        case geq(): {
+          if (lhsType != tint() || rhsType != tint()) {
+            msgs += error("greater than or equal comparison requires integer type operands", binop.src);
+          }
+        }
+        case eq(): {
+          if (!(lhsType == tint() && rhsType == tint()) || !(lhsType == tbool() && rhsType == tbool())) {
+            msgs += error("equals comparison requires both operands to be matching integer or boolean type", binop.src);
+          }
+        }
+        case neq(): {
+          if (!(lhsType == tint() && rhsType == tint()) || !(lhsType == tbool() && rhsType == tbool())) {
+            msgs += error("not equals comparison requires both operands to be matching integer or boolean type", binop.src);
+          }
+        }
+        case land(): {
+          if (lhsType != tbool() || rhsType != tbool()) {
+            msgs += error(" operator requires boolean type operands", binop.src);
+          }
+        }
+        case lor(): {
+          if (lhsType != tbool() || rhsType != tbool()) {
+            msgs += error(" operator requires boolean type operands", binop.src);
+          }
+        }
+        default: msgs += error("unknown binary operator", binop.src);
       }
     }
     case ref(AId x):
