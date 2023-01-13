@@ -68,26 +68,37 @@ HTMLElement genQuestionInput(str id, AType t, bool readonly) {
   str \type = "text";
   str placeholder = "";
   str val = "";
+  str oninput = "<id> = ";
   switch (t) {
     case strType(): {
       \type = "text";
       placeholder = "text";
       val = "";
+      oninput += "this.value";
     }
     case intType(): {
       \type = "number";
       placeholder = "0";
       val = "0";
+      oninput += "parseInt(this.value)";
     }
     case boolType(): {
       \type = "checkbox";
       val = "false";
+      oninput += "this.checked";
     }
   }
+  oninput += "; console.log(<id>)";
+  oninput += "; SetCalculatedValues()";
   if (readonly) {
     return input(id=id, \type=\type, placeholder=placeholder, disabled="true");
   } else {
-    return input(id=id, \type=\type, placeholder=placeholder);
+    switch (t) {
+      case strType(): return input(id=id, \type=\type, placeholder=placeholder, oninput=oninput);
+      case intType() :return input(id=id, \type=\type, placeholder=placeholder, oninput=oninput);
+      case boolType() :return input(id=id, \type=\type, placeholder=placeholder, onclick=oninput);
+      default: return div([]);
+    }
   }
 }
 
@@ -100,7 +111,6 @@ str form2js(AForm f) {
   js += jsSetCalculatedValuesFunction(f, rg);
   js += jsInitFunction();
 
-  js += "console.log(\"hello world\");\n";
   js += "Initialize();\n";
   return js;
 }
