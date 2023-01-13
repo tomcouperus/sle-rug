@@ -29,6 +29,7 @@ HTMLElement form2html(AForm f) {
   for (AQuestion q <- f.questions) {
     elems += question2html(q);
   }
+  elems += script([], src="<f.src[extension="js"].file>");
   return html(elems);
 }
 
@@ -41,13 +42,13 @@ HTMLElement question2html(AQuestion q) {
       class = "question";
       id = qid.name + "Container";
       elems += label([\data(p.string)], \for=qid.name);
-      elems += genQuestionInput(qid.name, t);
+      elems += genQuestionInput(qid.name, t, false);
     }
     case calculated(APrompt p, AId qid, AType t, _): {
       class = "calculated";
       id = qid.name + "Container";
       elems += label([\data(p.string)], \for=qid.name);
-      elems += genQuestionInput(qid.name, t);
+      elems += genQuestionInput(qid.name, t, true);
     }
     case ifelse(_, list[AQuestion] ifqs, list[AQuestion] elseqs): {
       class = "ifelse";
@@ -63,23 +64,33 @@ HTMLElement question2html(AQuestion q) {
   return qElem;
 }
 
-HTMLElement genQuestionInput(str id, AType t) {
+HTMLElement genQuestionInput(str id, AType t, bool readonly) {
   str \type = "text";
+  str placeholder = "";
+  str val = "";
   switch (t) {
     case strType(): {
       \type = "text";
+      placeholder = "text";
+      val = "";
     }
     case intType(): {
       \type = "number";
+      placeholder = "0";
+      val = "0";
     }
     case boolType(): {
       \type = "checkbox";
+      val = "false";
     }
   }
-  HTMLElement field = input(id=id, \type=\type);
-  return field;
+  if (readonly) {
+    return input(id=id, \type=\type, placeholder=placeholder, \value=val, disabled="true");
+  } else {
+    return input(id=id, \type=\type, placeholder=placeholder, \value=val);
+  }
 }
 
 str form2js(AForm f) {
-  return "";
+  return "console.log(\"hello world\")";
 }
