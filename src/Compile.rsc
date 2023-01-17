@@ -6,6 +6,9 @@ import IO;
 import lang::html::AST; // see standard library
 import lang::html::IO;
 
+
+int availableIfElseId = 0;
+
 /*
  * Implement a compiler for QL to HTML and Javascript
  *
@@ -20,7 +23,9 @@ import lang::html::IO;
  */
 
 void compile(AForm f) {
+  availableIfElseId = 0;
   writeFile(f.src[extension="js"].top, form2js(f));
+  availableIfElseId = 0;
   writeFile(f.src[extension="html"].top, writeHTMLString(form2html(f)));
 }
 
@@ -50,14 +55,16 @@ HTMLElement question2html(AQuestion q) {
       elems += label([\data(p.string)], \for=qid.name);
       elems += genQuestionInput(qid.name, t, true);
     }
-    case ifelse(AExpr e, list[AQuestion] ifqs, list[AQuestion] elseqs): {
+    case ifelse(_, list[AQuestion] ifqs, list[AQuestion] elseqs): {
       class = "ifelse";
+      str ifelseid = "ifelse<availableIfElseId>";
+      availableIfElseId += 1;
       list[HTMLElement] ifs = [];
       list[HTMLElement] elses = [];
       for (AQuestion q <- ifqs) ifs += question2html(q);
       for (AQuestion q <- elseqs) elses += question2html(q);
-      elems += div(ifs, class="if", id=AExprToJSExpr(e));
-      elems += div(elses, class="else", id="!" + AExprToJSExpr(e));
+      elems += div(ifs, class="if <ifelseid>");
+      elems += div(elses, class="else <ifelseid>");
     }
   }
   HTMLElement qElem = div(elems, class=class, id=id);
@@ -211,12 +218,14 @@ str jsSetIfBlocksFunction(AForm f) {
   str js = "function SetIfBlocks() {\n";
   for (/ifelse(AExpr e, _, _) := f) {
     str exprString = AExprToJSExpr(e);
+    str ifelseid = "ifelse<availableIfElseId>";
+    availableIfElseId += 1;
     js += "if (" + exprString + ") {\n";
-    js += "document.getElementById(\"" + exprString + "\").style.display = \"block\";\n";
-    js += "document.getElementById(\"!" + exprString + "\").style.display = \"none\";\n";
+    js += "document.getElementsByClassName(\"" + ifelseid + "\")[0].style.display = \"block\";\n";
+    js += "document.getElementsByClassName(\"" + ifelseid + "\")[1].style.display = \"none\";\n";
     js += "} else {\n";
-    js += "document.getElementById(\"" + exprString + "\").style.display = \"none\";\n";
-    js += "document.getElementById(\"!" + exprString + "\").style.display = \"block\";\n";
+    js += "document.getElementsByClassName(\"" + ifelseid + "\")[0].style.display = \"none\";\n";
+    js += "document.getElementsByClassName(\"" + ifelseid + "\")[1].style.display = \"block\";\n";
     js += "}\n";
   }
   js += "}\n\n";
@@ -227,6 +236,7 @@ str jsInitFunction() {
   str js = "function Initialize() {\n";
   js += "InitializeVars();\n";
   js += "SetCalculatedValues();\n";
+  js += "SetIfBlocks();\n";
   js += "}\n\n";
   return js;
 }
