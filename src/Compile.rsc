@@ -50,14 +50,14 @@ HTMLElement question2html(AQuestion q) {
       elems += label([\data(p.string)], \for=qid.name);
       elems += genQuestionInput(qid.name, t, true);
     }
-    case ifelse(_, list[AQuestion] ifqs, list[AQuestion] elseqs): {
+    case ifelse(AExpr e, list[AQuestion] ifqs, list[AQuestion] elseqs): {
       class = "ifelse";
       list[HTMLElement] ifs = [];
       list[HTMLElement] elses = [];
       for (AQuestion q <- ifqs) ifs += question2html(q);
       for (AQuestion q <- elseqs) elses += question2html(q);
-      elems += div(ifs, class="if");
-      elems += div(elses, class="else");
+      elems += div(ifs, class="if", id=AExprToJSExpr(e));
+      elems += div(elses, class="else", id="!" + AExprToJSExpr(e));
     }
   }
   HTMLElement qElem = div(elems, class=class, id=id);
@@ -90,6 +90,7 @@ HTMLElement genQuestionInput(str id, AType t, bool readonly) {
   }
   oninput += "; console.log(<id>)";
   oninput += "; SetCalculatedValues()";
+  oninput += "; SetIfBlocks()";
   if (readonly) {
     return input(id=id, \type=\type, placeholder=placeholder, disabled="true");
   } else {
@@ -109,6 +110,7 @@ str form2js(AForm f) {
   
   js += jsInitVarsFunction(f, rg);
   js += jsSetCalculatedValuesFunction(f, rg);
+  js += jsSetIfBlocksFunction(f);
   js += jsInitFunction();
 
   js += "Initialize();\n";
@@ -132,7 +134,7 @@ str jsInitVarsFunction(AForm f, RefGraph rg) {
       switch (t) {
         case strType(): js += "\"hi\"";
         case intType(): js += "2";
-        case boolType(): js += "true";
+        case boolType(): js += "false";
       }
       js += ";\n";
       js += "document.getElementById(\"<name>\")";
@@ -205,10 +207,26 @@ str jsSetCalculatedValuesFunction(AForm f, RefGraph rg) {
   return js;
 }
 
+str jsSetIfBlocksFunction(AForm f) {
+  str js = "function SetIfBlocks() {\n";
+  for (/ifelse(AExpr e, _, _) := f) {
+    str exprString = AExprToJSExpr(e);
+    js += "if (" + exprString + ") {\n";
+    js += "document.getElementById(\"" + exprString + "\").style.display = \"block\";\n";
+    js += "document.getElementById(\"!" + exprString + "\").style.display = \"none\";\n";
+    js += "} else {\n";
+    js += "document.getElementById(\"" + exprString + "\").style.display = \"none\";\n";
+    js += "document.getElementById(\"!" + exprString + "\").style.display = \"block\";\n";
+    js += "}\n";
+  }
+  js += "}\n\n";
+  return js;
+}
+
 str jsInitFunction() {
   str js = "function Initialize() {\n";
   js += "InitializeVars();\n";
-  js += "SetCalculatedValues()\n";
+  js += "SetCalculatedValues();\n";
   js += "}\n\n";
   return js;
 }
