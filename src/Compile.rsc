@@ -139,8 +139,8 @@ str jsInitVarsFunction(AForm f, RefGraph rg) {
     for (/question(_, id(name), AType t) := f) {
       js += "<name> = ";
       switch (t) {
-        case strType(): js += "\"hi\"";
-        case intType(): js += "2";
+        case strType(): js += "\"\"";
+        case intType(): js += "0";
         case boolType(): js += "false";
       }
       js += ";\n";
