@@ -17,13 +17,15 @@
 14. `AForm demoAST = cst2ast(demoForm);`
 15. `RefGraph demoRefGraph = resolve(demoAST);`
 16. `TEnv demoTEnv = collect(demoAST);`
-17. `check(demoAST, demoTEnv, demoRefGraph.useDef);`
+17. `set[Message] demoMsgs = check(demoAST, demoTEnv, demoRefGraph.useDef);`
 18. `VEnv demoVEnv = initialEnv(demoAST);`
 19. `compile(demoAST);`
 20. `Input demoInput1 = input("int1", vint(69420));`
 21. `VEnv demoVEnvAfterInput1 = eval(demoAST, demoInput1, demoVEnv);`
 22. `Input demoInput2 = input("bool1", vbool(true));`
 23. `VEnv demoVEnvAfterInput2 = eval(demoAST, demoInput2, demoVEnvAfterInput1);`
+24. `start[Form] demoFormRenamed = rename(demoForm, |project://sle-rug/examples/demo.myql|(116,4,<7,4>,<7,8>), "HelloWorld", demoRefGraph.useDef);`
+25. `AForm demoASTFlat = flatten(demoAST);`
 
 ## Rerun
 1. `import ParseTree;`
@@ -42,10 +44,12 @@
 14. `demoAST = cst2ast(demoForm);`
 15. `demoRefGraph = resolve(demoAST);`
 16. `demoTEnv = collect(demoAST);`
-17. `check(demoAST, demoTEnv, demoRefGraph.useDef);`
+17. `demoMsgs = check(demoAST, demoTEnv, demoRefGraph.useDef);`
 18. `demoVEnv = initialEnv(demoAST);`
 19. `compile(demoAST);`
-20. `Input demoInput1 = input("int1", vint(69420));`
-21. `VEnv demoVEnvAfterInput1 = eval(demoAST, demoInput1, demoVEnv);`
-22. `Input demoInput2 = input("bool1", vbool(true));`
-23. `VEnv demoVEnvAfterInput2 = eval(demoAST, demoInput2, demoVEnvAfterInput1);`
+20. `demoInput1 = input("int1", vint(69420));`
+21. `demoVEnvAfterInput1 = eval(demoAST, demoInput1, demoVEnv);`
+22. `demoInput2 = input("bool1", vbool(true));`
+23. `demoVEnvAfterInput2 = eval(demoAST, demoInput2, demoVEnvAfterInput1);`
+24. `demoFormRenamed = rename(demoForm, |project://sle-rug/examples/demo.myql|(116,4,<7,4>,<7,8>), "HelloWorld", demoRefGraph.useDef);`
+25. `demoASTFlat = flatten(demoAST);`
