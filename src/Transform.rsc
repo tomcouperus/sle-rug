@@ -30,7 +30,33 @@ import ParseTree;
  */
  
 AForm flatten(AForm f) {
+  list[AQuestion] qs = [];
+  for (q <- f.questions) {
+    qs += flatten(q, lit(boolLit(true)));
+  }
+  f.questions = qs;
   return f; 
+}
+
+list[AQuestion] flatten(AQuestion q, AExpr cond) {
+  list[AQuestion] qs = [];
+  switch (q) {
+    case question(_,_,_): {
+      qs += ifelse(cond, [q], []);
+    }
+    case calculated(_,_,_,_): {
+      qs += ifelse(cond, [q], []);
+    }
+    case ifelse(AExpr ifcond, list[AQuestion] ifqs, list[AQuestion] elseqs): {
+      for (AQuestion ifq <- ifqs) {
+        qs += flatten(ifq, binop(cond, land(), ifcond));
+      }
+      for (AQuestion elseq <- elseqs) {
+        qs += flatten(elseq, binop(cond, land(), unop(uNot(), ifcond)));
+      }
+    }
+  }
+  return qs;
 }
 
 /* Rename refactoring:
