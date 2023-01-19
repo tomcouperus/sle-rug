@@ -31,6 +31,11 @@
 25. `check(cycaf, cycte, cycrg.useDef);`
 26. `check(taxaf, taxte, taxrg.useDef);`
 26. `check(errorsaf, errorste, errorsrg.useDef);`
+27. `import Eval;`
+28. `VEnv binve = initialEnv(binaf);`
+29. `VEnv cycve = initialEnv(cycaf);`
+30. `VEnv taxve = initialEnv(taxaf);`
+31. `import Compile;`
 
 ## For long output, do the following
 1. `import IO;`

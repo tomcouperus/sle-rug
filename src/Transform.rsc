@@ -3,6 +3,7 @@ module Transform
 import Syntax;
 import Resolve;
 import AST;
+import ParseTree;
 
 /* 
  * Transforming QL forms
@@ -29,7 +30,33 @@ import AST;
  */
  
 AForm flatten(AForm f) {
+  list[AQuestion] qs = [];
+  for (q <- f.questions) {
+    qs += flatten(q, lit(boolLit(true)));
+  }
+  f.questions = qs;
   return f; 
+}
+
+list[AQuestion] flatten(AQuestion q, AExpr cond) {
+  list[AQuestion] qs = [];
+  switch (q) {
+    case question(_,_,_): {
+      qs += ifelse(cond, [q], []);
+    }
+    case calculated(_,_,_,_): {
+      qs += ifelse(cond, [q], []);
+    }
+    case ifelse(AExpr ifcond, list[AQuestion] ifqs, list[AQuestion] elseqs): {
+      for (AQuestion ifq <- ifqs) {
+        qs += flatten(ifq, binop(cond, land(), ifcond));
+      }
+      for (AQuestion elseq <- elseqs) {
+        qs += flatten(elseq, binop(cond, land(), unop(uNot(), ifcond)));
+      }
+    }
+  }
+  return qs;
 }
 
 /* Rename refactoring:
@@ -40,7 +67,25 @@ AForm flatten(AForm f) {
  */
  
 start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
-   return f; 
+  set[loc] toRename = {};
+  if (useOrDef in useDef<1>) {
+    // def
+    toRename += useOrDef;
+    toRename += {useLoc | <loc useLoc, useOrDef> <- useDef};
+  } else if (useOrDef in useDef<0>) {
+    // use, so get def and do the same as above here
+    if (<useOrDef, loc defLoc> <- useDef) {
+      toRename += defLoc;
+      toRename += {useLoc | <loc useLoc, defLoc> <- useDef};
+    }
+  } else {
+    return f;
+  }
+
+  return visit (f) {
+    case Id x => [Id]newName
+      when x.src in toRename
+  } 
 } 
  
  
