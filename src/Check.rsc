@@ -219,19 +219,19 @@ set[Message] check(AExpr e, TEnv tenv, UseDef useDef) {
           }
         }
         case land(): {
-          if (lhsType != tint()) {
-            msgs += error("logical and operator requires integer type operands", lhs.src);
+          if (lhsType != tbool()) {
+            msgs += error("logical and operator requires boolean type operands", lhs.src);
           }
-          if (rhsType != tint()) {
-            msgs += error("logical and operator requires integer type operands", rhs.src);
+          if (rhsType != tbool()) {
+            msgs += error("logical and operator requires boolean type operands", rhs.src);
           }
         }
         case lor(): {
-          if (lhsType != tint()) {
-            msgs += error("logical or operator requires integer type operands", lhs.src);
+          if (lhsType != tbool()) {
+            msgs += error("logical or operator requires boolean type operands", lhs.src);
           }
-          if (rhsType != tint()) {
-            msgs += error("logical or operator requires integer type operands", rhs.src);
+          if (rhsType != tbool()) {
+            msgs += error("logical or operator requires boolean type operands", rhs.src);
           }
         }
         default: msgs += error("unknown binary operator", binop.src);
