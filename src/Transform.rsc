@@ -3,6 +3,7 @@ module Transform
 import Syntax;
 import Resolve;
 import AST;
+import ParseTree;
 
 /* 
  * Transforming QL forms
@@ -40,7 +41,25 @@ AForm flatten(AForm f) {
  */
  
 start[Form] rename(start[Form] f, loc useOrDef, str newName, UseDef useDef) {
-   return f; 
+  set[loc] toRename = {};
+  if (useOrDef in useDef<1>) {
+    // def
+    toRename += useOrDef;
+    toRename += {useLoc | <loc useLoc, useOrDef> <- useDef};
+  } else if (useOrDef in useDef<0>) {
+    // use, so get def and do the same as above here
+    if (<useOrDef, loc defLoc> <- useDef) {
+      toRename += defLoc;
+      toRename += {useLoc | <loc useLoc, defLoc> <- useDef};
+    }
+  } else {
+    return f;
+  }
+
+  return visit (f) {
+    case Id x => [Id]newName
+      when x.src in toRename
+  } 
 } 
  
  
