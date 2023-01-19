@@ -1,0 +1,39 @@
+form demo {
+  "Boolean one"
+    bool1: boolean
+  // change for squiggly in `int1 > 0 && bool1`
+
+  "Integer one"
+    int1: integer
+  // change for squiggly in `cint1` and in `int1 > 0 && bool1`
+
+  "String one"
+    string1: string
+
+  if (int1 > 0 && bool1) {
+    "Integer two"
+      int2: integer
+
+    "Calculated integer 1"
+      cint1: integer = int1 + int2
+  } else {
+    "Integer threee"
+      int3: integer
+
+    "Calculated integer 2"
+      cint2: integer = int1 - int3
+  }
+
+  // ""
+  //   emptyLabel: string
+  // empty label to show error (it's a parse error, but it's in the right place)
+
+  // "Undeclared id"
+  //   undeclaredId: integer = intUndeclared
+  // undeclared id gives error
+
+  // "Duplicate"
+  //   int1: integer
+  // duplicate id gives warning
+
+}
