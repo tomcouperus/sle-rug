@@ -57,14 +57,14 @@ HTMLElement question2html(AQuestion q) {
     }
     case ifelse(_, list[AQuestion] ifqs, list[AQuestion] elseqs): {
       class = "ifelse";
-      str ifelseid = "ifelse<availableIfElseId>";
+      id = "ifelse<availableIfElseId>";
       availableIfElseId += 1;
       list[HTMLElement] ifs = [];
       list[HTMLElement] elses = [];
       for (AQuestion q <- ifqs) ifs += question2html(q);
       for (AQuestion q <- elseqs) elses += question2html(q);
-      elems += div(ifs, class="if <ifelseid>");
-      elems += div(elses, class="else <ifelseid>");
+      elems += div(ifs, class="if <id>");
+      elems += div(elses, class="else <id>");
     }
   }
   HTMLElement qElem = div(elems, class=class, id=id);
