@@ -79,12 +79,14 @@ set[Message] check(AQuestion q, TEnv tenv, UseDef useDef) {
 set[Message] checkTypeRedefinition(AQuestion q1, TEnv tenv) {
   set[Message] msgs = {};
   for (q2 <- tenv) {
-    if (q1.id.name == q2.name && convert(q1.idtype) != q2.\type) {
-      msgs += error("Redefinition with different type: \'<typeString(convert(q1.idtype))>\' vs \'<typeString(q2.\type)>\'", 
-        q1.id.src);
-      break;
+    if (q1.id.name == q2.name) {
+      if (convert(q1.idtype) != q2.\type) {
+        msgs += error("Redefinition with different type: \'<typeString(convert(q1.idtype))>\' vs \'<typeString(q2.\type)>\'", q1.id.src);
+      } else if (q1.id.src != q2.def) {
+        msgs += warning("Redefinition", q1.id.src);
+      }
+      // break;
     }
-    continue;
   }
   return msgs; 
 }
